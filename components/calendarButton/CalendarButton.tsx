@@ -5,7 +5,9 @@ const CalendarButton = () => {
     const {CalendarModule} = NativeModules;
     const onPress = () => {
         CalendarModule.createCalendarEvent('testName', 'testLocation');
-        CalendarModule.showDatePicker()
+        CalendarModule.showDatePicker( ( error:string , fecha:string ) => {
+            console.log("fecha: ", fecha)
+        } )
     };
 
     return (

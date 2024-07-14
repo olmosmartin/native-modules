@@ -11,6 +11,7 @@ import com.facebook.react.bridge.ReactMethod
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import com.facebook.react.bridge.Callback
 
 
 class CalendarModule(reactContext: ReactApplicationContext) :
@@ -25,7 +26,7 @@ class CalendarModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun showDatePicker() {
+    fun showDatePicker(callback: Callback) {
         val currentActivity = currentActivity
         if (currentActivity != null) { // Check if activity is available
             val calendar = Calendar.getInstance()
@@ -37,7 +38,8 @@ class CalendarModule(reactContext: ReactApplicationContext) :
                 currentActivity, // Use current activity
                 { _, selectedYear, selectedMonth, selectedDay ->
                     val formattedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                    Toast.makeText(reactApplicationContext, formattedDate, Toast.LENGTH_SHORT).show()
+                    callback.invoke(null, formattedDate) // Invoca el callback con la fecha formateada con error en null
+//                    Toast.makeText(reactApplicationContext, formattedDate, Toast.LENGTH_SHORT).show()
                 },
                 year,
                 month,
@@ -48,6 +50,7 @@ class CalendarModule(reactContext: ReactApplicationContext) :
         } else {
             // Handle the case where the activity is not available
             Log.e("CalendarModule", "Error: Current activity is null, cannot show DatePicker")
+            callback.invoke("No se pudo mostrar el DatePicker", null)
             // You might want to send an error back to JavaScript here
         }
     }
